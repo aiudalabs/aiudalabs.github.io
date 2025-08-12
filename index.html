@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConectaCuba - Servicios Cubanos en Panamá</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 20px 0;
+            opacity: 0.9;
+        }
+        
+        .download-section {
+            margin: 40px 0;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .features {
+            text-align: left;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-icon {
+            margin-right: 15px;
+            font-size: 1.5em;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            p {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🇨🇺🇵🇦</div>
+        <h1>ConectaCuba</h1>
+        <p>La app que conecta a la comunidad cubana en Panamá con los mejores servicios</p>
+        
+        <div class="download-section">
+            <p><strong>¡Descarga la app para ver este contenido!</strong></p>
+            <a href="#" class="download-btn" onclick="tryOpenApp()">📱 Abrir App</a>
+            <a href="#" class="download-btn">🍎 Descargar para iOS</a>
+            <a href="#" class="download-btn">🤖 Descargar para Android</a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔍</div>
+                <div>Encuentra servicios cubanos cerca de ti</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💬</div>
+                <div>Conecta directamente con los proveedores</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⭐</div>
+                <div>Lee y deja reseñas de servicios</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📍</div>
+                <div>Ubicación y mapas integrados</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>ConectaCuba - Conectando comunidades 🤝</p>
+        </div>
+    </div>
+
+    <script>
+        // Detectar si estamos en un dispositivo móvil
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        // Intentar abrir la app
+        function tryOpenApp() {
+            if (isMobile()) {
+                // En dispositivos móviles, intentar abrir la app con custom scheme
+                window.location.href = 'conectacuba://';
+                
+                // Fallback después de 2 segundos si no se abre la app
+                setTimeout(function() {
+                    alert('App no instalada. Por favor descarga ConectaCuba desde tu tienda de apps.');
+                }, 2000);
+            } else {
+                alert('Esta función está disponible en dispositivos móviles. ¡Descarga la app!');
+            }
+        }
+        
+        // Auto-detección de links de servicios
+        window.addEventListener('load', function() {
+            const path = window.location.pathname;
+            
+            if (path.startsWith('/service/')) {
+                const serviceId = path.replace('/service/', '');
+                document.querySelector('.container p').innerHTML = 
+                    `<strong>¡Has recibido un enlace a un servicio específico!</strong><br>
+                    Descarga la app ConectaCuba para verlo.`;
+                    
+                // Intentar abrir automáticamente en móvil
+                if (isMobile()) {
+                    setTimeout(() => {
+                        window.location.href = 'conectacuba://service/' + serviceId;
+                    }, 1000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
