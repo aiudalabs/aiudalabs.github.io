@@ -1,125 +1,116 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConectaCuba - Abrir en App</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        
-        .container {
-            text-align: center;
-            max-width: 500px;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .loading {
-            font-size: 3em;
-            animation: spin 2s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            margin: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            color: white;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="loading">📱</div>
-        <h1>Abriendo ConectaCuba...</h1>
-        <p id="status">Detectando enlace y redirigiendo...</p>
-        
-        <div style="margin-top: 30px;">
-            <button class="btn" onclick="manualRedirect()">
-                🔗 Intentar de Nuevo
-            </button>
-            <a href="/" class="btn">
-                🏠 Ir al Inicio
-            </a>
-        </div>
-    </div>
+  <html lang="es">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>ConectaCuba - Abriendo...</title>
+      <style>
+          body {
+              font-family: Arial, sans-serif;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              text-align: center;
+              padding: 50px 20px;
+              min-height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: 0;
+          }
+          .container {
+              max-width: 500px;
+              background: rgba(255, 255, 255, 0.1);
+              padding: 40px;
+              border-radius: 20px;
+              backdrop-filter: blur(10px);
+          }
+          .loading {
+              font-size: 3em;
+              animation: spin 2s linear infinite;
+              margin-bottom: 20px;
+          }
+          @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+          }
+          .btn {
+              display: inline-block;
+              padding: 15px 30px;
+              margin: 10px;
+              background: rgba(255, 255, 255, 0.2);
+              border: 2px solid rgba(255, 255, 255, 0.3);
+              border-radius: 50px;
+              color: white;
+              text-decoration: none;
+              cursor: pointer;
+              font-size: 1em;
+          }
+          .btn:hover {
+              background: rgba(255, 255, 255, 0.3);
+          }
+      </style>
+  </head>
+  <body>
+      <div class="container">
+          <div class="loading">📱</div>
+          <h1>Abriendo ConectaCuba...</h1>
+          <p id="status">Detectando enlace...</p>
+          <div style="margin-top: 30px;">
+              <button class="btn" onclick="location.reload()">🔄 Reintentar</button>
+              <a href="/" class="btn">🏠 Inicio</a>
+          </div>
+      </div>
+      <script>
+          function detectAndRedirect() {
+              const path = window.location.pathname;
+              const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    <script>
-        function parseURL() {
-            const path = window.location.pathname;
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            // Construir el deep link basado en la ruta
-            let deepLink = 'conectacuba://';
-            
-            if (path.startsWith('/service/')) {
-                const serviceId = path.replace('/service/', '').split('/')[0];
-                deepLink += 'service/' + serviceId;
-                document.getElementById('status').textContent = `Abriendo servicio: ${serviceId}`;
-            } else if (path.startsWith('/category/')) {
-                const categoryId = path.replace('/category/', '').split('/')[0];
-                deepLink += 'category/' + categoryId;
-                document.getElementById('status').textContent = `Abriendo categoría: ${categoryId}`;
-            } else if (path.startsWith('/user/')) {
-                const userId = path.replace('/user/', '').split('/')[0];
-                deepLink += 'user/' + userId;
-                document.getElementById('status').textContent = `Abriendo perfil: ${userId}`;
-            } else {
-                deepLink += '';
-                document.getElementById('status').textContent = 'Abriendo app principal';
-            }
-            
-            if (isMobile) {
-                setTimeout(() => {
-                    window.location.href = deepLink;
-                    
-                    // Fallback si no se abre la app
-                    setTimeout(() => {
-                        document.getElementById('status').textContent = 
-                            'App no encontrada. ¿Deseas descargar ConectaCuba?';
-                        document.querySelector('.loading').textContent = '❗';
-                    }, 3000);
-                }, 1000);
-            } else {
-                document.getElementById('status').textContent = 
-                    'Esta función requiere un dispositivo móvil con la app instalada.';
-                document.querySelector('.loading').textContent = '💻';
-            }
-        }
-        
-        function manualRedirect() {
-            parseURL();
-        }
-        
-        window.addEventListener('load', parseURL);
-    </script>
-</body>
-</html>
+              let deepLink = 'conectacuba://';
+              let statusText = 'Abriendo app principal';
+
+              if (path.startsWith('/service/')) {
+                  const serviceId = path.replace('/service/', '').split('/')[0];
+                  if (serviceId && serviceId !== '') {
+                      deepLink += 'service/' + serviceId;
+                      statusText = `Abriendo servicio: ${serviceId}`;
+                  }
+              } else if (path.startsWith('/category/')) {
+                  const categoryId = path.replace('/category/', '').split('/')[0];
+                  if (categoryId && categoryId !== '') {
+                      deepLink += 'category/' + categoryId;
+                      statusText = `Abriendo categoría: ${categoryId}`;
+                  }
+              } else if (path.startsWith('/user/')) {
+                  const userId = path.replace('/user/', '').split('/')[0];
+                  if (userId && userId !== '') {
+                      deepLink += 'user/' + userId;
+                      statusText = `Abriendo perfil: ${userId}`;
+                  }
+              }
+
+              document.getElementById('status').textContent = statusText;
+
+              if (isMobile) {
+                  setTimeout(() => {
+                      console.log('Redirecting to:', deepLink);
+                      window.location.href = deepLink;
+
+                      // Fallback si no se abre la app
+                      setTimeout(() => {
+                          document.getElementById('status').textContent =
+                              'App no encontrada. ¿Necesitas descargar ConectaCuba?';
+                          document.querySelector('.loading').textContent = '❗';
+                      }, 3000);
+                  }, 1000);
+              } else {
+                  document.getElementById('status').textContent =
+                      'Esta función requiere un dispositivo móvil con la app instalada.';
+                  document.querySelector('.loading').textContent = '💻';
+              }
+          }
+
+          // Ejecutar cuando carga la página
+          window.addEventListener('load', detectAndRedirect);
+      </script>
+  </body>
+  </html>
