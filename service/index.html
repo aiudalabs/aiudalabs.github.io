@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio - ConectaCuba</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        
+        .service-id {
+            font-size: 1.2em;
+            opacity: 0.8;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .actions {
+            margin: 30px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="service-icon">🛍️</div>
+        <h1>Servicio Específico</h1>
+        <p>Has recibido un enlace a un servicio en ConectaCuba</p>
+        
+        <div class="service-id" id="serviceInfo">
+            Cargando información del servicio...
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary" onclick="openInApp()">
+                📱 Abrir en la App
+            </button>
+            <a href="../index.html" class="btn">
+                🏠 Ir al Inicio
+            </a>
+        </div>
+        
+        <p><small>¿No tienes la app? <a href="../index.html" style="color: #fff;">¡Descárgala aquí!</a></small></p>
+    </div>
+
+    <script>
+        function getServiceId() {
+            // Obtener el ID del servicio de la URL
+            const pathParts = window.location.pathname.split('/');
+            const serviceIndex = pathParts.indexOf('service');
+            return serviceIndex !== -1 && pathParts[serviceIndex + 1] ? 
+                   pathParts[serviceIndex + 1] : 'unknown';
+        }
+        
+        function openInApp() {
+            const serviceId = getServiceId();
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Intentar con custom scheme primero
+                window.location.href = `conectacuba://service/${serviceId}`;
+                
+                // Fallback después de 2 segundos
+                setTimeout(() => {
+                    alert('App no encontrada. Por favor descarga ConectaCuba.');
+                    window.location.href = '../index.html';
+                }, 2000);
+            } else {
+                alert('Esta función está disponible en dispositivos móviles.');
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            const serviceId = getServiceId();
+            document.getElementById('serviceInfo').innerHTML = 
+                `<strong>ID del Servicio:</strong> ${serviceId}`;
+                
+            // Auto-abrir en móviles después de 1 segundo
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile && serviceId !== 'unknown') {
+                setTimeout(() => {
+                    openInApp();
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

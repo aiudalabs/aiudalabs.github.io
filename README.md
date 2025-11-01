@@ -2,7 +2,7 @@
 
 🇨🇺🇵🇦 Sitio web para manejar los App Links/Universal Links de ConectaCuba
 
-## 🔗 URLs Soportadas
+## 🔗 URLs Soportadas test
 
 - `https://aiudalabs.github.io/service/[ID]` - Abre un servicio específico
 - `https://aiudalabs.github.io/category/[ID]` - Abre una categoría específica  
