@@ -1,10 +1,16 @@
 [
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.aiudalabs.servicios_cu_pty",
-      "sha256_cert_fingerprints": ["F9:E3:69:A8:C1:FF:12:07:EA:95:7E:05:90:6B:EB:BA:FA:52:3F:21:70:39:50:A6:E8:35:CD:0C:D4:66:94:F5"]
-    }
+{
+  "relation": [
+    "delegate_permission/common.handle_all_urls",
+    "delegate_permission/common.get_login_creds"
+  ],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.aiudalabs.servicios_cu_pty",
+    "sha256_cert_fingerprints": [
+      "BF:0B:AF:E1:9A:2E:6E:DD:68:13:3C:FB:6D:8B:85:C2:E9:3F:31:8D:51:03:10:FD:9A:C1:9F:61:2A:2D:E3:22",
+      "F9:E3:69:A8:C1:FF:12:07:EA:95:7E:05:90:6B:EB:BA:FA:52:3F:21:70:39:50:A6:E8:35:CD:0C:D4:66:94:F5"
+    ]
   }
+}
 ]
