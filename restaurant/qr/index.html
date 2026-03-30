@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestaurantOS - Abriendo menu...</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #8B1A0E 0%, #C8392B 50%, #D4A853 100%);
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            max-width: 420px;
+            padding: 40px 30px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .logo { font-size: 3em; margin-bottom: 8px; }
+        h1 { font-size: 1.8em; margin: 12px 0; font-weight: 700; }
+        .status { font-size: 1.1em; opacity: 0.9; margin: 16px 0; line-height: 1.5; }
+        .spinner {
+            width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white; border-radius: 50%;
+            animation: spin 1s linear infinite; margin: 24px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fallback { display: none; margin-top: 24px; }
+        .fallback.show { display: block; }
+        .btn {
+            display: inline-block; padding: 14px 28px; margin: 8px;
+            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px; color: white; text-decoration: none;
+            font-size: 1em; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .btn-primary { background: rgba(200,57,43,0.6); border-color: rgba(200,57,43,0.8); }
+        .table-info {
+            margin: 16px 0; padding: 12px 16px;
+            background: rgba(255,255,255,0.1); border-radius: 12px;
+            font-size: 0.95em;
+        }
+        .footer { margin-top: 32px; font-size: 0.8em; opacity: 0.5; }
+        .footer a { color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🍽️</div>
+        <h1 id="title">Abriendo el menu...</h1>
+
+        <div id="loading">
+            <div class="spinner"></div>
+            <p class="status">Conectando con el restaurante</p>
+        </div>
+
+        <div id="fallback" class="fallback">
+            <div class="table-info" id="tableInfo"></div>
+            <p class="status">La app no se abrio automaticamente.<br>Puedes intentar de nuevo:</p>
+            <a class="btn btn-primary" id="openAppBtn" href="#">📱 Abrir en la App</a>
+            <p style="margin-top: 20px; font-size: 0.95em; opacity: 0.8;">
+                Si no tienes la app instalada, pronto estara disponible en las tiendas.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>Powered by <a href="https://aiudalabs.com">AiudaLabs</a></p>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const org = params.get('org');
+        const branch = params.get('branch');
+        const table = params.get('table');
+
+        function buildAppUrl() {
+            return `https://aiudalabs.github.io/restaurant/qr/?org=${org}&branch=${branch}&table=${table}`;
+        }
+
+        function buildIntentUrl() {
+            // Android intent URL — opens app if installed, stays on page if not
+            const url = buildAppUrl();
+            return `intent://restaurant/qr/?org=${org}&branch=${branch}&table=${table}#Intent;scheme=https;package=com.aiudalabs.restaurantos.client;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end`;
+        }
+
+        function showFallback() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('fallback').classList.add('show');
+            document.getElementById('title').textContent = 'Menu del restaurante';
+
+            if (table) {
+                document.getElementById('tableInfo').innerHTML =
+                    `<strong>Mesa:</strong> Escaneaste el QR correctamente`;
+            }
+
+            document.getElementById('openAppBtn').href = buildIntentUrl();
+        }
+
+        if (!org || !branch || !table) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('title').textContent = 'QR no valido';
+            document.getElementById('fallback').classList.add('show');
+            document.getElementById('fallback').innerHTML =
+                '<p class="status">Este codigo QR no contiene la informacion necesaria.<br>Pide ayuda al mesero.</p>';
+        } else {
+            // Try to open the app via Android intent
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isAndroid = /Android/i.test(navigator.userAgent);
+
+            if (isAndroid) {
+                // Use intent URL for Android — cleanest approach
+                window.location.href = buildIntentUrl();
+                setTimeout(showFallback, 2500);
+            } else if (isMobile) {
+                // iOS or other mobile — just show fallback since we don't have Apple setup
+                setTimeout(showFallback, 1500);
+            } else {
+                // Desktop — show fallback immediately
+                setTimeout(showFallback, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
